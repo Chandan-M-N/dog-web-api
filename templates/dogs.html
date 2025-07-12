@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Breeds | Woof Explorer</title>
+    <link rel="stylesheet" href="/static/dogs.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Chewy&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dogs-container">
+        <header class="dogs-header">
+            <h1>Dog Breed Directory</h1>
+            
+            <!-- Add New Main Breed Form -->
+            <div class="add-breed-card">
+                <h2>Add New Breed</h2>
+                <form action="/add-dog" method="POST" id="mainBreedForm" class="add-breed-form">
+                    <div class="form-row">
+                        <input type="text" name="breed" placeholder="Breed name" required>
+                    </div>
+                    <div class="form-row">
+                        <input type="text" name="sub_breed" placeholder="Sub-breed (optional)">
+                    </div>
+                    <div class="form-row">
+                        <button type="submit" class="cta-button">Add Breed</button>
+                    </div>
+                </form>
+            </div>
+            
+            <a href="/" class="home-link">← Back to Home</a>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search breeds or sub-breeds..." oninput="filterBreeds()">
+            <button>🔍</button>
+        </div>
+
+        <!-- Breed Display -->
+        <div class="breed-list">
+            {% for breed, sub_breeds in breeds_dict.items() | sort %}
+            <div class="breed-card" data-breed="{{ breed.lower() }}" data-subs="{{ sub_breeds|join(',')|lower }}">
+                <div class="main-breed">
+                    <div class="breed-title">
+                        <h2>{{ breed }}</h2>
+                        <div class="breed-actions">
+                            <button type="button" class="icon-btn edit-breed" data-breed="{{ breed }}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <form action="/delete-breed" method="POST" class="delete-breed-form">
+                                <input type="hidden" name="breed" value="{{ breed }}">
+                                <button type="submit" class="icon-btn"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                    <span class="sub-count">{{ sub_breeds|length }} variant{% if sub_breeds|length != 1 %}s{% endif %}</span>
+                </div>
+                
+                <div class="sub-breeds">
+                    {% if sub_breeds %}
+                        <ul>
+                            {% for sub in sub_breeds | sort %}
+                            <li>
+                                <span>{{ sub }}</span>
+                                <form action="/delete-subbreed" method="POST" class="delete-sub-form">
+                                    <input type="hidden" name="breed" value="{{ breed }}">
+                                    <input type="hidden" name="sub_breed" value="{{ sub }}">
+                                    <button type="submit" class="delete-btn">Delete</button>
+                                </form>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="no-subs">No sub-breeds registered</p>
+                    {% endif %}
+                    
+                    <form action="/add-subbreed" method="POST" class="add-sub-form">
+                        <input type="hidden" name="breed" value="{{ breed }}">
+                        <input type="text" name="sub_breed" placeholder="Add new sub-breed" required>
+                        <button type="submit">+ Add</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Edit Breed Modal -->
+    <div id="editModal" class="modal">
+    <div class="modal-content">
+        <span class="close" style="float: right">&times;</span>
+        <h2>Edit Breed</h2>
+        <form action="/edit-dog" method="POST" id="editBreedForm" onsubmit="return validateEditForm()">
+            <input type="hidden" id="editOriginalBreed" name="original_breed">
+            <div class="form-group">
+                <label for="editBreedName">Breed Name *</label>
+                <input type="text" id="editBreedName" name="breed" required>
+            </div>
+            <div class="form-group" id="subBreedsContainer">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="cta-button">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    <script>
+        // Search functionality
+        function filterBreeds() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('.breed-card').forEach(card => {
+                const breedName = card.getAttribute('data-breed');
+                const subBreeds = card.getAttribute('data-subs');
+                const matches = breedName.includes(searchTerm) || subBreeds.includes(searchTerm);
+                card.style.display = matches ? 'block' : 'none';
+            });
+        }
+
+        // Edit Modal Handling
+        const modal = document.getElementById("editModal");
+        const editBtns = document.querySelectorAll(".edit-breed");
+        const span = document.getElementsByClassName("close")[0];
+
+        editBtns.forEach(btn => {
+    btn.addEventListener("click", function() {
+        const breed = this.getAttribute("data-breed");
+        const card = this.closest('.breed-card');
+        const subBreeds = card.getAttribute("data-subs").split(',');
+        
+        document.getElementById("editOriginalBreed").value = breed;
+        document.getElementById("editBreedName").value = breed;
+        
+        const container = document.getElementById("subBreedsContainer");
+        container.innerHTML = '';
+        
+        if (subBreeds[0] !== "") {
+            container.innerHTML = '<label>Sub-breeds</label>';
+            subBreeds.forEach((sub) => {
+                if (sub.trim()) {
+                    const div = document.createElement('div');
+                    div.className = 'sub-breed-input';
+                    div.innerHTML = `
+                        <input type="text" value="${sub.trim()}" name="sub_breeds" placeholder="Sub-breed" required>
+                    `;
+                    container.appendChild(div);
+                }
+            });
+        }
+        
+        modal.style.display = "block";
+    });
+});
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Sort breeds alphabetically
+        document.addEventListener('DOMContentLoaded', function() {
+            const breedList = document.querySelector('.breed-list');
+            const breeds = Array.from(document.querySelectorAll('.breed-card'));
+            
+            breeds.sort((a, b) => {
+                const aName = a.querySelector('h2').textContent.toLowerCase();
+                const bName = b.querySelector('h2').textContent.toLowerCase();
+                return aName.localeCompare(bName);
+            });
+            
+            breeds.forEach(breed => breedList.appendChild(breed));
+        });
+
+        // Form validation
+        function validateEditForm() {
+            const breedName = document.getElementById("editBreedName").value.trim();
+            if (!breedName) {
+                alert("Breed name cannot be empty!");
+                return false;
+            }
+            return true;
+        }
+
+    function validateEditForm() {
+    const breedName = document.getElementById("editBreedName").value.trim();
+    if (!breedName) {
+        alert("Breed name cannot be empty!");
+        return false;
+    }
+    
+    // Validate sub-breed inputs
+    const subBreedInputs = document.querySelectorAll('#subBreedsContainer input[type="text"]');
+    for (let input of subBreedInputs) {
+        if (!input.value.trim()) {
+            alert("Sub-breed names cannot be empty!");
+            return false;
+        }
+    }
+    
+    return true;
+}
+    </script>
+</body>
+</html>

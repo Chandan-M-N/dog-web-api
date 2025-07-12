@@ -1,0 +1,335 @@
+/* Base Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #FFF5E6;
+    color: #3A2C1C;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.dogs-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Header */
+.dogs-header {
+    margin-bottom: 30px;
+    border-bottom: 2px solid #F7C59F;
+    padding-bottom: 20px;
+}
+
+.dogs-header h1 {
+    font-family: 'Chewy', cursive;
+    color: #FF6B35;
+    font-size: 2.5rem;
+    margin: 0 0 10px 0;
+    text-shadow: 2px 2px 0px #F7C59F;
+}
+
+.home-link {
+    color: #6B4D3E;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+/* Search Box */
+.search-box {
+    display: flex;
+    max-width: 500px;
+    margin: 15px 0;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #F7C59F;
+    border-radius: 8px 0 0 8px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.search-box button {
+    background: #FF6B35;
+    color: white;
+    border: none;
+    padding: 0 20px;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+/* Breed Cards */
+.breed-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.breed-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.main-breed {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px dashed #F7C59F;
+}
+
+.main-breed h2 {
+    font-weight: 700;
+    color: #3A2C1C;
+    margin: 0;
+    font-size: 1.4rem;
+    letter-spacing: 0.5px;
+}
+
+.sub-count {
+    background: #F7C59F;
+    color: #3A2C1C;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Sub-breeds */
+.sub-breeds ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+}
+
+.sub-breeds li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #FFF9F2;
+    border-radius: 6px;
+    border-left: 3px solid #FF6B35;
+}
+
+.no-subs {
+    color: #6B4D3E;
+    font-style: italic;
+    margin: 10px 0;
+    padding: 10px;
+    background: #FFF9F2;
+    border-radius: 6px;
+}
+
+/* Forms */
+.add-sub-form, .add-breed-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.add-sub-form input, 
+.add-breed-form input {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #F7C59F;
+    border-radius: 6px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.add-sub-form button {
+    background: #06D6A0;
+    color: white;
+    border: none;
+    padding: 0 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Add Breed Card */
+.add-breed-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.add-breed-card h2 {
+    color: #3A2C1C;
+    margin-top: 0;
+}
+
+.cta-button {
+    background: #FF6B35;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+}
+
+/* Breed Actions */
+.breed-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.breed-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    color: #6B4D3E;
+    font-size: 1rem;
+}
+
+.icon-btn:hover {
+    color: #FF6B35;
+}
+
+.delete-form {
+    margin: 0;
+}
+
+.delete-btn {
+    background: #FF6B35;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #FFF5E6;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    max-height: 70vh; 
+    overflow: auto; 
+    display: block; 
+}
+
+.modal-scroll-container {
+    padding-right: 10px;
+}
+
+.close {
+    color: #6B4D3E;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #FF6B35;
+}
+
+/* Edit Form */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #F7C59F;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.sub-breed-display {
+    background: #FFF9F2;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    border-left: 3px solid #F7C59F;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.cancel-btn {
+    flex: 1;
+    padding: 12px;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.sub-breed-input input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #F7C59F;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+
+/* Responsive */
+@media (max-width: 600px) {
+    .dogs-header h1 {
+        font-size: 2rem;
+    }
+    
+    .sub-breeds ul {
+        grid-template-columns: 1fr;
+    }
+    
+    .add-sub-form, 
+    .add-breed-form {
+        flex-direction: column;
+    }
+}
