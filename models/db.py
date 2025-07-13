@@ -4,7 +4,7 @@ from typing import List, Dict, Optional
 from dotenv import load_dotenv
 import os
 
-load_dotenv()  # Load environment variables from .env file
+# load_dotenv()  # Load environment variables from .env file
 
 DB_CONFIG = {
         "dbname": os.getenv("DB_NAME"),
