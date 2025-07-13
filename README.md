@@ -93,6 +93,20 @@ dog-breed-explorer/
 
 ```
 
+## UI Screenshots
+
+### Index Page
+
+![alt text](/images/index.png)
+
+### Dogs Explorer
+
+![alt text](/images/breed_directory.png)
+
+### Edit Breed
+
+![alt text](/images/edit_breed.png)
+
 ## License
 
 Apache 2.0 License
