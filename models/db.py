@@ -193,30 +193,42 @@ def edit_dog(original_breed: str, new_breed: str,
              original_sub_breed: Optional[str] = None,
              new_sub_breed: Optional[str] = None) -> bool:
     """
-    Edit a breed or sub-breed
+    Edit a breed or sub-breed with special handling:
+    - If sub_breeds are None: updates ALL entries for the breed
+    - If sub_breeds are provided: updates only the specific combo
     Returns: True if updated, False if new combo exists
     """
     conn = get_db_connection()
     cur = conn.cursor()
     
     try:
-        # Check if new combo already exists
-        cur.execute("""
-            SELECT 1 FROM dogs 
-            WHERE breed = %s AND sub_breed IS NOT DISTINCT FROM %s
-            AND NOT (breed = %s AND sub_breed IS NOT DISTINCT FROM %s)
-            LIMIT 1
-        """, (new_breed, new_sub_breed, original_breed, original_sub_breed))
+        # Check if new combo already exists (only if we're changing to something new)
+        if new_breed != original_breed or new_sub_breed != original_sub_breed:
+            cur.execute("""
+                SELECT 1 FROM dogs 
+                WHERE breed = %s AND sub_breed IS NOT DISTINCT FROM %s
+                AND NOT (breed = %s AND sub_breed IS NOT DISTINCT FROM %s)
+                LIMIT 1
+            """, (new_breed, new_sub_breed, original_breed, original_sub_breed))
+            
+            if cur.fetchone():
+                return False  # New combo exists
         
-        if cur.fetchone():
-            return False  # New combo exists
-        
-        # Update the record
-        cur.execute("""
-            UPDATE dogs 
-            SET breed = %s, sub_breed = %s
-            WHERE breed = %s AND sub_breed IS NOT DISTINCT FROM %s
-        """, (new_breed, new_sub_breed, original_breed, original_sub_breed))
+        # Update the record(s)
+        if original_sub_breed is None:
+            # Case 1: Update all entries for this breed (main breed and all sub-breeds)
+            cur.execute("""
+                UPDATE dogs 
+                SET breed = %s
+                WHERE breed = %s
+            """, (new_breed, original_breed))
+        else:
+            # Case 2: Update specific breed/sub-breed combo
+            cur.execute("""
+                UPDATE dogs 
+                SET breed = %s, sub_breed = %s
+                WHERE breed = %s AND sub_breed IS NOT DISTINCT FROM %s
+            """, (new_breed, new_sub_breed, original_breed, original_sub_breed))
         
         conn.commit()
         return cur.rowcount > 0
@@ -224,7 +236,6 @@ def edit_dog(original_breed: str, new_breed: str,
     except Exception as e:
         conn.rollback()
         print(f"Error editing dog: {e}")
-        raise
     finally:
         cur.close()
         conn.close()

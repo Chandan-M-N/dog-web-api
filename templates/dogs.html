@@ -95,18 +95,22 @@
         </div>
     </div>
 
-    <!-- Edit Breed Modal -->
-    <div id="editModal" class="modal">
+   <!-- Edit Breed Modal -->
+<div id="editModal" class="modal">
     <div class="modal-content">
         <span class="close" style="float: right">&times;</span>
         <h2>Edit Breed</h2>
         <form action="/edit-dog" method="POST" id="editBreedForm" onsubmit="return validateEditForm()">
+            <!-- Hidden fields for original values -->
             <input type="hidden" id="editOriginalBreed" name="original_breed">
+            <input type="hidden" id="editOriginalSubBreed" name="original_sub_breed">
+            
             <div class="form-group">
                 <label for="editBreedName">Breed Name *</label>
                 <input type="text" id="editBreedName" name="breed" required>
             </div>
             <div class="form-group" id="subBreedsContainer">
+                <!-- Sub-breeds will be added here dynamically -->
             </div>
             <div class="form-actions">
                 <button type="submit" class="cta-button">Save Changes</button>
@@ -138,6 +142,7 @@
         const card = this.closest('.breed-card');
         const subBreeds = card.getAttribute("data-subs").split(',');
         
+        // Set original breed value
         document.getElementById("editOriginalBreed").value = breed;
         document.getElementById("editBreedName").value = breed;
         
@@ -146,12 +151,13 @@
         
         if (subBreeds[0] !== "") {
             container.innerHTML = '<label>Sub-breeds</label>';
-            subBreeds.forEach((sub) => {
+            subBreeds.forEach((sub, index) => {
                 if (sub.trim()) {
                     const div = document.createElement('div');
                     div.className = 'sub-breed-input';
                     div.innerHTML = `
-                        <input type="text" value="${sub.trim()}" name="sub_breeds" placeholder="Sub-breed" required>
+                        <input type="hidden" name="original_sub_breeds" value="${sub.trim()}">
+                        <input type="text" name="sub_breeds" value="${sub.trim()}" placeholder="Sub-breed" required>
                     `;
                     container.appendChild(div);
                 }
