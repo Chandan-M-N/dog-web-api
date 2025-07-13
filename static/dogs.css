@@ -317,6 +317,41 @@ body {
     margin-bottom: 8px;
 }
 
+/* Flash Messages */
+.flash-messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 300px;
+}
+
+.flash-success, .flash-error {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    animation: slideIn 0.5s, fadeOut 0.5s 4.5s forwards;
+}
+
+.flash-success {
+    background-color: #06D6A0;
+}
+
+.flash-error {
+    background-color: #FF6B35;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; }
+}
 
 /* Responsive */
 @media (max-width: 600px) {
