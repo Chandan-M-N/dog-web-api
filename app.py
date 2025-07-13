@@ -22,14 +22,12 @@ def list_dogs():
         breeds_dict = defaultdict(list)
         for dog in dogs:
             if dog['sub_breed']:
-                breeds_dict[dog['breed']].append(dog['sub_breed'].capitalize())
+                breeds_dict[dog['breed'].capitalize()].append(dog['sub_breed'].capitalize())
             else:
                 breeds_dict[dog['breed'].capitalize()] = [] 
-        
         # Convert to regular dict and sort
         breeds_dict = dict(sorted(breeds_dict.items()))
         main_breeds = list(breeds_dict.keys())
-        # print(breeds_dict,main_breeds)
         return render_template(
             'dogs.html',
             breeds_dict=breeds_dict,
@@ -56,7 +54,6 @@ def add_dog_route():
         if not breed:
             flash('Breed is required', 'error')
             return redirect(url_for('list_dogs'))
-        print(breed,"add")
         success = add_dog(breed, sub_breed)
         
         if success:
@@ -138,8 +135,6 @@ def delete_subbreed_route():
     try:
         breed = request.form.get('breed', '').strip().lower()
         sub_breed = request.form.get('sub_breed', '').strip().lower()
-
-        print(breed,sub_breed,"delete-subbreed")
         
         if not breed or not sub_breed:
             flash('Both breed and sub-breed are required', 'error')

@@ -52,6 +52,8 @@ def add_dog(breed: str, sub_breed: Optional[str] = None) -> bool:
     Returns: True if successful, False if:
         - breed/sub-breed combo already exists
         - breed already exists (when sub_breed is None)
+    Special case: If breed exists with NULL sub_breed and we're adding a sub_breed,
+                 update the existing record instead of creating a new one
     """
     conn = get_db_connection()
     cur = conn.cursor()
@@ -61,23 +63,39 @@ def add_dog(breed: str, sub_breed: Optional[str] = None) -> bool:
         if sub_breed is None:
             cur.execute("""
                 SELECT 1 FROM dogs 
-                WHERE breed = %s
+                WHERE breed = %s AND sub_breed IS NULL
                 LIMIT 1
             """, (breed,))
             if cur.fetchone():
                 return False  # Main breed already exists
         
-        # Then check if breed/sub-breed combo exists (for any case)
+        # Then check if breed/sub-breed combo exists
         cur.execute("""
             SELECT 1 FROM dogs 
             WHERE breed = %s AND sub_breed IS NOT DISTINCT FROM %s
             LIMIT 1
         """, (breed, sub_breed))
-        
         if cur.fetchone():
             return False  # Combo already exists
         
-        # Insert new entry
+        # Special case: If breed exists with NULL sub_breed and we're adding a sub_breed
+        if sub_breed is not None:
+            cur.execute("""
+                SELECT 1 FROM dogs 
+                WHERE breed = %s AND sub_breed IS NULL
+                LIMIT 1
+            """, (breed,))
+            if cur.fetchone():
+                # Update existing NULL sub_breed record
+                cur.execute("""
+                    UPDATE dogs 
+                    SET sub_breed = %s
+                    WHERE breed = %s AND sub_breed IS NULL
+                """, (sub_breed, breed))
+                conn.commit()
+                return True
+        
+        # Normal case: Insert new entry
         cur.execute("""
             INSERT INTO dogs (breed, sub_breed)
             VALUES (%s, %s)

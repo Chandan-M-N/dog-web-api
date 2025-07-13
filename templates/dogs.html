@@ -49,7 +49,7 @@
         <!-- Breed Display -->
         <div class="breed-list">
             {% for breed, sub_breeds in breeds_dict.items() | sort %}
-            <div class="breed-card" data-breed="{{ breed.lower() }}" data-subs="{{ sub_breeds|join(',')|lower }}">
+            <div class="breed-card" data-breed="{{ breed.lower() }}" data-subs="{{ sub_breeds|join(',')|lower }}" data-original-subs="{{ sub_breeds|join(',') }}">
                 <div class="main-breed">
                     <div class="breed-title">
                         <h2>{{ breed }}</h2>
@@ -140,7 +140,7 @@
     btn.addEventListener("click", function() {
         const breed = this.getAttribute("data-breed");
         const card = this.closest('.breed-card');
-        const subBreeds = card.getAttribute("data-subs").split(',');
+        const subBreeds = card.getAttribute("data-original-subs").split(',');
         
         // Set original breed value
         document.getElementById("editOriginalBreed").value = breed;
