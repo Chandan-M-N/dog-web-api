@@ -1,14 +1,19 @@
 # models/db.py
 import psycopg2
 from typing import List, Dict, Optional
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Load environment variables from .env file
 
 DB_CONFIG = {
-    "dbname": "postgres",
-    "user": "postgres",
-    "password": "dogwebapi",
-    "host": "localhost",
-    "port": "5432"
-}
+        "dbname": os.getenv("DB_NAME"),
+        "user": os.getenv("DB_USER"),
+        "password": os.getenv("DB_PASSWORD"),
+        "host": os.getenv("DB_HOST"),
+        "port": os.getenv("DB_PORT")
+    }
+
 
 def get_db_connection():
     """Establish and return a database connection"""
